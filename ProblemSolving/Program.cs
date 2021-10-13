@@ -20,7 +20,73 @@ namespace ProblemSolving
             //solve(new int[] { 1, 3, 13, 31, 33, 34, 44, 46, 50, 62, 64, 65, 69, 70, 74, 75, 77, 94, 105, 108, 109, 111, 114, 115, 116, 126, 128, 132, 139, 145, 146, 149, 153, 157, 158, 164, 166, 175, 178, 187, 188, 195, 197, 198, 201, 204, 207, 208, 209, 210, 212, 218, 222, 237, 242, 244, 247, 252, 255, 263, 264, 266, 273, 276, 277, 284, 292, 294, 300, 308, 325, 335, 338, 342, 346, 348, 351, 352, 353, 354, 356, 365, 370, 373, 382, 384, 385, 398, 405, 410, 426, 427, 428, 447, 448, 455, 457, 459, 465, 497 });
             //happyNumber();
             //ifUniqueChars();
-            jumpingOnClouds(new List<int> { 0, 0, 1, 0, 0, 1, 0 });
+            //jumpingOnClouds(new List<int> { 0, 0, 1, 0, 0, 1, 0 });
+            //https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
+            climbingLeaderboard(new List<int> { 100, 100, 50, 40, 40, 20, 10 }, new List<int> { 5, 25, 50, 120 });
+        }
+
+        public static List<int> climbingLeaderboard(List<int> ranked, List<int> player)
+        {
+            var rank = ranked.Distinct().ToList();
+            List<int> res = new List<int>();
+
+            Stack<int> stack = new Stack<int>();
+            foreach (int r in rank)
+                stack.Push(r);
+
+            foreach (int play in player)
+            {
+                bool placeFound = false;
+            repeatStmt:
+                int temp = stack.Count() >= 1 ? stack.Peek() : -999;
+
+                if (temp != -999)
+                {
+                    if (play == temp)
+                    {
+                        res.Add(stack.Count());
+                        placeFound = true;
+                    }
+                    else if (play < temp)
+                    {
+                        res.Add(stack.Count() + 1);
+                        placeFound = true;
+                    }
+                    else if (play > temp)
+                    {
+                        if (stack.Count() == 1)
+                        {
+                            res.Add(1);
+                            placeFound = true;
+                        }
+                        stack.Pop();
+                        goto repeatStmt;
+                    }
+                }
+                if(!placeFound)
+                    res.Add(1);
+            }
+            return res;
+
+            #region Time complexity is high
+            //var rank = ranked.Distinct().ToList(); 
+            //List<int> res = new List<int>();
+            //bool found = false;
+            //foreach (int play in player)
+            //{
+            //    for (int i = 0; i < rank.Count(); i++)
+            //    {
+            //        if (play >= rank[i])
+            //        {
+            //            res.Add(i + 1);
+            //            found = true;
+            //            break;
+            //        }
+            //    }
+            //    if (!found) res.Add(rank.Count() + 1);
+            //}
+            //return res; 
+            #endregion
         }
 
         public static int jumpingOnClouds(List<int> c)
@@ -37,14 +103,13 @@ namespace ProblemSolving
                 jumps++;
             }
             return jumps;
-
         }
 
         static void ifUniqueChars()
         {
             string s = "apple";
             bool[] chkChars = new bool[256];
-            foreach(char c in s)
+            foreach (char c in s)
             {
                 if (!chkChars[(int)c])
                     chkChars[(int)c] = true;
